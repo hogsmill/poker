@@ -16,14 +16,14 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <h1 v-if="!appName">
+      <h1>
         Poker Club
       </h1>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item" :class="{ active: tab == 'results' }">
+        <li class="nav-item" :class="{ active: currentTab == 'results' }">
           <a class="nav-link pointer" @click="setTab('results')">Results</a>
         </li>
-        <li class="nav-item" :class="{ active: tab == 'meets' }">
+        <li class="nav-item" :class="{ active: currentTab == 'meets' }">
           <a class="nav-link pointer" @click="setTab('meets')">Meets</a>
         </li>
         <li class="nav-item">
@@ -66,7 +66,7 @@ export default {
     thisGame() {
       return this.$store.getters.thisGame
     },
-    tab() {
+    currentTab() {
       return this.$store.getters.getTab
     }
   },
@@ -74,11 +74,10 @@ export default {
     if (location.search == '?host') {
       this.$store.dispatch('updateHost', true)
     }
-    this.appName = process.env.VUE_APP_NAME
   },
   methods: {
     setTab(tab) {
-      console.log(tab)
+      alert(tab)
       this.$store.dispatch('setTab', tab)
     },
     show () {

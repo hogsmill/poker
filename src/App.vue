@@ -11,8 +11,8 @@
       Poker Night
     </h1>
     <!--
-    <Results v-if="tab == 'results'" />
-    <Meets v-if="tab == 'meets'" />
+    <Results v-if="currentTab == 'results'" />
+    <Meets v-if="currentTab == 'meets'" />
     -->
     <Results />
     <Meets />
@@ -42,7 +42,7 @@ export default {
     localStorageStatus() {
       return this.$store.getters.getLocalStorageStatus
     },
-    tab() {
+    currentTab() {
       return this.$store.getters.getTab
     }
   },
