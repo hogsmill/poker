@@ -10,10 +10,8 @@
     <h1>
       Poker Night
     </h1>
-    <!--
     <Results v-if="currentTab == 'results'" />
     <Meets v-if="currentTab == 'meets'" />
-    -->
     <Results />
     <Meets />
   </div>

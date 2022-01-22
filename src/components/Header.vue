@@ -77,7 +77,6 @@ export default {
   },
   methods: {
     setTab(tab) {
-      alert(tab)
       this.$store.dispatch('setTab', tab)
     },
     show () {
