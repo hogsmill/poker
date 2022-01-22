@@ -13,6 +13,7 @@ function newPlayer(data) {
 function _updatePlayers(db, io) {
   db.gameCollection.find({}).toArray((err) => {
     io.emit('updatePlayers', res)
+  })
 }
 
 module.exports = {
