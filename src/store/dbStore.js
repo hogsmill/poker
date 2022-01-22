@@ -1,18 +1,30 @@
 
+const { v4: uuid } = require('uuid')
+
+function newPlayer(data) {
+  return {
+    id: uuidv4(),
+    name: data.name,
+    nickname: data.nickname,
+    contact: data.contact
+  }
+}
+
+function _updatePlayers(db, io) {
+  db.gameCollection.find({}).toArray((err) => {
+    io.emit('updatePlayers', res)
+}
+
 module.exports = {
 
-  testMessage: function(db, io, data, debugOn, updating) {
+  addPlayer: function(db, io, data, debugOn, updating) {
 
-    if (debugOn) { console.log('testMessage', data) }
+    if (debugOn) { console.log('addPlayer', data) }
 
-    const res = {
-      source: data.source,
-      date: new Date().toISOString(),
-      message: data.message
-    }
-    db.gameCollection.insertOne(res, (err) => {
+    const player = newPlayer(data)
+    db.gameCollection.insertOne(player, (err) => {
       if (err) throw err
-      io.emit('testMessage', res)
+      _updatePlayers(db, io)
     })
   }
 

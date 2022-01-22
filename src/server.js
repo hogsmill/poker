@@ -8,7 +8,7 @@ const os = require('os')
 const prod = os.hostname() == 'agilesimulations' ? true : false
 const logFile = prod ? process.argv[4] : 'server.log'
 const port = prod ? process.env.VUE_APP_PORT : 3016
-const gameCollection =  prod ? process.env.VUE_APP_COLLECTION : 'socketTest'
+const gameCollection =  prod ? process.env.VUE_APP_COLLECTION : 'poker'
 
 ON_DEATH((signal, err) => {
   let logStr = new Date()
@@ -102,9 +102,13 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
       emit('updateConnections', {connections: connections, maxConnections: maxConnections})
     })
 
-    socket.on('sendTestMessage', (data) => { dbStore.testMessage(db, io, data, debugOn) })
+    socket.on('sendAddPlayer', (data) => { console.log(1); dbStore.addPlayer(db, io, data, debugOn) })
 
-    socket.on('sendEmitMessage', (data) => { emit('emitMessage', data) })
+    socket.on('sendDeletePlayer', (data) => { dbStore.deletePlayer(db, io, data, debugOn) })
+
+    socket.on('sendUpdatelayer', (data) => { dbStore.updatePlayer(db, io, data, debugOn) })
+
+    socket.on('sendAddGame', (data) => { dbStore.addGame(db, io, data, debugOn) })
 
   })
 })

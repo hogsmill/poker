@@ -3,36 +3,14 @@ import bus from './EventBus'
 
 const prod = location.hostname != 'localhost'
 
-let asConnStr, connStr
+let connStr
 if (!prod) {
-  asConnStr = 'http://localhost:3099'
   connStr = 'http://localhost:3016'
 } else {
-  asConnStr = 'https://agilesimulations.co.uk:3099'
   connStr = 'https://agilesimulations.co.uk:' + process.env.VUE_APP_PORT
 }
 console.log('Connecting to: ' + connStr)
 const socket = io(connStr)
-
-const connectToAgileSimulations = location.hostname != 'localhost'
-let asSocket
-if (connectToAgileSimulations) {
-  console.log('Connecting to: ' + asConnStr)
-  asSocket = io(asConnStr)
-}
-
-// Agile Simulations (login)
-
-if (connectToAgileSimulations) {
-
-  bus.$on('sendCheckLogin', (data) => { asSocket.emit('sendCheckLogin', data) })
-
-  bus.$on('sendRating', (data) => { asSocket.emit('sendRating', data) })
-
-  asSocket.on('loginSuccess', (data) => { bus.$emit('loginSuccess', data) })
-
-  asSocket.on('logout', (data) => { bus.$emit('logout', data) })
-}
 
 socket.on('connect_error', (err) => { bus.$emit('connectionError', err) })
 
@@ -40,16 +18,18 @@ socket.on('updateConnections', (data) => { bus.$emit('updateConnections', data) 
 
 // Send
 
-bus.$on('sendTestMessage', (data) => { socket.emit('sendTestMessage', data) })
+bus.$on('sendAddPlayer', (data) => { socket.emit('sendAddPlayer', data) })
 
-bus.$on('sendEmitMessage', (data) => { socket.emit('sendEmitMessage', data) })
+bus.$on('sendDeletePlayer', (data) => { socket.emit('sendDeletePlayer', data) })
 
-bus.$on('sendShowGraph', (data) => { bus.$emit('showGraph', data) })
+bus.$on('sendUpdatePlayer', (data) => { socket.emit('sendDeletePlayer', data) })
+
+bus.$on('sendAddGame', (data) => { socket.emit('sendAddGame', data) })
 
 // Receive
 
-socket.on('testMessage', (data) => { bus.$emit('testMessage', data) })
+socket.on('updatePlayers', (data) => { bus.$emit('updatePlayers', data) })
 
-socket.on('emitMessage', (data) => { bus.$emit('emitMessage', data) })
+socket.on('updateGames', (data) => { bus.$emit('updateGames', data) })
 
 export default bus
