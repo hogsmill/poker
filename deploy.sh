@@ -13,10 +13,10 @@ done
 
 BASEPORT=3101
 REPO="https://github.com/hogsmill/google-meet.git"
-MAINAPP="google-meet"
+MAINAPP="poker"
 MAINPLAYERCOLLECTION="pokerPlayers"
 MAINGAMESCOLLECTION="pokerGames"
-MAINNAME="Google Meet"
+MAINNAME="Poker"
 ROUTES=(
   '',''
 )
