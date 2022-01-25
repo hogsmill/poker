@@ -25,7 +25,17 @@ function createTable(players, games) {
     results.push({id: key, results: table[key]})
   }
   return results.sort((a, b) => {
-    return b.results.won - a.results.won
+    let sorted
+    if (a.results.won == b.results.won) {
+      if (a.results.played == b.results.played) {
+        sorted = a.results.name < b.results.name
+      } else {
+        sorted = b.results.played - a.results.played
+      }
+    } else {
+      sorted = b.results.won - a.results.won
+    }
+    return sorted
   })
 }
 

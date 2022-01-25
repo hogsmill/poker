@@ -23,8 +23,8 @@
         <li class="nav-item" :class="{ active: currentTab == 'results' }">
           <a class="nav-link pointer" @click="setTab('results')">Results</a>
         </li>
-        <li class="nav-item" :class="{ active: currentTab == 'meets' }">
-          <a class="nav-link pointer" @click="setTab('meets')">Meets</a>
+        <li class="nav-item" :class="{ active: currentTab == 'games' }">
+          <a class="nav-link pointer" @click="setTab('games')">Games and Players</a>
         </li>
         <li class="nav-item">
           <a class="nav-link pointer" @click="show()">Feedback</a>
