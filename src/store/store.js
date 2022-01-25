@@ -28,7 +28,7 @@ function createTable(players, games) {
     let sorted
     if (a.results.won == b.results.won) {
       if (a.results.played == b.results.played) {
-        sorted = a.results.name < b.results.name
+        sorted = b.results.name < a.results.name
       } else {
         sorted = b.results.played - a.results.played
       }
