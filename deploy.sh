@@ -11,7 +11,7 @@ do
   shift
 done
 
-BASEPORT=4650
+BASEPORT=4800
 REPO="https://github.com/hogsmill/google-meet.git"
 MAINAPP="google-meet"
 MAINPLAYERCOLLECTION="pokerPlayers"
