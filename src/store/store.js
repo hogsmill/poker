@@ -13,11 +13,14 @@ function createTable(players, games) {
     }
   }
   for (let j = 0; j < games.length; j++) {
-    if (games[j].winner) {
-      table[games[j].winner.id].won = table[games[j].winner.id].won + 1
-    }
-    for (let k = 0; k < games[j].players.length; k++) {
-      table[games[j].players[k]].played = table[games[j].players[k]].played + 1
+    const gameDate = new Date(games[j].year, games[j].month - 1, games[j].day)
+    if (gameDate < new Date()) {
+      if (games[j].winner) {
+        table[games[j].winner.id].won = table[games[j].winner.id].won + 1
+      }
+      for (let k = 0; k < games[j].players.length; k++) {
+        table[games[j].players[k]].played = table[games[j].players[k]].played + 1
+      }
     }
   }
   const results = []

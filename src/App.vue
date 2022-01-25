@@ -11,7 +11,7 @@
       Poker Night
     </h1>
     <Results v-if="currentTab == 'results'" />
-    <Meets v-if="currentTab == 'meets'" />
+    <Meets v-if="currentTab == 'games'" />
   </div>
 </template>
 
