@@ -14,11 +14,11 @@ done
 BASEPORT=4650
 REPO="https://github.com/hogsmill/google-meet.git"
 MAINAPP="google-meet"
-MAINCOLLECTION="googleMeet"
+MAINPLAYERCOLLECTION="pokerPlayers"
+MAINGAMESCOLLECTION="pokerGames"
 MAINNAME="Google Meet"
 ROUTES=(
   '',''
-  'new','New'
 )
 
 for ((i = 0; i < ${#ROUTES[@]}; i++))
@@ -31,18 +31,22 @@ do
   if [ "$ROUTE" != "" ]; then
     APP="${APP}-${ROUTE}"
   fi
-  COLLECTION=$MAINCOLLECTION
+  PLAYERCOLLECTION=$MAINPLAYERCOLLECTION
   if [ "$COLLECTIONSUFFIX" != "" ]; then
-    COLLECTION="${COLLECTION}${COLLECTIONSUFFIX}"
+    PLAYERCOLLECTION="${PLAYERCOLLECTION}${COLLECTIONSUFFIX}"
+  fi
+  GAMECOLLECTION=$MAINGAMECOLLECTION
+  if [ "$COLLECTIONSUFFIX" != "" ]; then
+    GAMECOLLECTION="${GAMECOLLECTION}${COLLECTIONSUFFIX}"
   fi
   APPNAME=$MAINNAME
   let PORT=$BASEPORT+$i
 
   echo "------------------------------------------------"
   if [ -z "$APPNAME" ]; then
-    echo "Installing $APP ($COLLECTION, $PORT)"
+    echo "Installing $APP ($PLAYERCOLLECTION, $GAMECOLLECTION, $PORT)"
   else
-    echo "Installing $APP ($COLLECTION, $PORT, $APPNAME)"
+    echo "Installing $APP ($PLAYERCOLLECTION, $GAMECOLLECTION, $PORT, $APPNAME)"
   fi
   echo "------------------------------------------------"
 
@@ -52,7 +56,8 @@ do
   fi
   ENVFILE="$DIR/.env"
   echo "VUE_APP_PORT=$PORT" > $ENVFILE
-  echo "VUE_APP_COLLECTION=$COLLECTION" >> $ENVFILE
+  echo "VUE_APP_PLAYER_COLLECTION=$PLAYERCOLLECTION" >> $ENVFILE
+  echo "VUE_APP_GAME_COLLECTION=$GAMECOLLECTION" >> $ENVFILE
   if [ ! -z "$APPNAME" ]; then
     echo "VUE_APP_NAME=$APPNAME" >> $ENVFILE
   fi

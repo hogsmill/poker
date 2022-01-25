@@ -53,6 +53,18 @@ export default {
       this.$store.dispatch('updateConnectionError', null)
       this.$store.dispatch('updateConnections', data)
     })
+
+    bus.$emit('sendUpdatePlayers')
+    bus.$emit('sendUpdateGames')
+
+    bus.$on('updatePlayers', (data) => {
+      this.$store.dispatch('updatePlayers', data)
+    })
+
+    bus.$on('updateGames', (data) => {
+      console.log('games', data)
+      this.$store.dispatch('updateGames', data)
+    })
   }
 }
 </script>

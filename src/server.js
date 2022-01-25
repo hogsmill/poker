@@ -8,7 +8,8 @@ const os = require('os')
 const prod = os.hostname() == 'agilesimulations' ? true : false
 const logFile = prod ? process.argv[4] : 'server.log'
 const port = prod ? process.env.VUE_APP_PORT : 3016
-const gameCollection =  prod ? process.env.VUE_APP_COLLECTION : 'poker'
+const playerCollection =  prod ? process.env.VUE_APP_PLAYER_COLLECTION : 'pokerPlayers'
+const gameCollection =  prod ? process.env.VUE_APP_GAME_COLLECTION : 'pokerGames'
 
 ON_DEATH((signal, err) => {
   let logStr = new Date()
@@ -55,7 +56,6 @@ if (!prod) {
   })
 }
 
-
 const dbStore = require('./store/dbStore.js')
 
 const MongoClient = require('mongodb').MongoClient
@@ -80,8 +80,10 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
   if (err) throw err
   db = client.db('db')
 
+  db.createCollection(playerCollection, function(error, collection) {})
   db.createCollection(gameCollection, function(error, collection) {})
 
+  db.playerCollection = db.collection(playerCollection)
   db.gameCollection = db.collection(gameCollection)
 
   io.on('connection', (socket) => {
@@ -102,13 +104,23 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
       emit('updateConnections', {connections: connections, maxConnections: maxConnections})
     })
 
-    socket.on('sendAddPlayer', (data) => { console.log(1); dbStore.addPlayer(db, io, data, debugOn) })
+    socket.on('sendUpdatePlayers', () => { dbStore.updatePlayers(db, io, debugOn) })
+
+    socket.on('sendUpdateGames', () => { dbStore.updateGames(db, io, debugOn) })
+
+    socket.on('sendAddPlayer', (data) => { dbStore.addPlayer(db, io, data, debugOn) })
 
     socket.on('sendDeletePlayer', (data) => { dbStore.deletePlayer(db, io, data, debugOn) })
 
-    socket.on('sendUpdatelayer', (data) => { dbStore.updatePlayer(db, io, data, debugOn) })
+    socket.on('sendUpdatePlayer', (data) => { dbStore.updatePlayer(db, io, data, debugOn) })
 
     socket.on('sendAddGame', (data) => { dbStore.addGame(db, io, data, debugOn) })
+
+    socket.on('sendUpdateGame', (data) => { dbStore.updateGame(db, io, data, debugOn) })
+
+    socket.on('sendUpdateWinner', (data) => { dbStore.updateWinner(db, io, data, debugOn) })
+    
+    socket.on('sendToggleGamePlayer', (data) => { dbStore.toggleGamePlayer(db, io, data, debugOn) })
 
   })
 })

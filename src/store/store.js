@@ -3,13 +3,28 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+function createTable(games) {
+  const table = {}
+  let i
+  for (i = 0; i < games.length; i++) {
+    table[games.host] = {
+      played: 0,
+      won: 0
+    }
+  }
+  return games
+}
+
 export const store = new Vuex.Store({
   state: {
     thisGame: 'Poker Club',
     connections: 0,
     connectionError: null,
     localStorageStatus: true,
-    tab: 'results'
+    tab: 'results',
+    players: [],
+    games: [],
+    table: []
   },
   getters: {
     thisGame: (state) => {
@@ -26,6 +41,22 @@ export const store = new Vuex.Store({
     },
     getTab: (state) => {
       return state.tab
+    },
+    getPlayers: (state) => {
+      return state.players
+    },
+    getGames: (state) => {
+      return state.games
+    },
+    getGamesSorted: (state) => {
+      return state.games.sort((a, b) => {
+        const aDate = new Date(a.year, a.month - 1, a.day)
+        const bDate = new Date(b.year, b.month - 1, b.day)
+        return bDate - aDate
+      })
+    },
+    getTable: (state) => {
+      return state.table
     }
   },
   mutations: {
@@ -40,6 +71,13 @@ export const store = new Vuex.Store({
     },
     setTab: (state, payload) => {
       state.tab = payload
+    },
+    updatePlayers: (state, payload) => {
+      state.players = payload
+    },
+    updateGames: (state, payload) => {
+      state.games = payload
+      state.table = createTable(payload)
     }
   },
   actions: {
@@ -54,6 +92,12 @@ export const store = new Vuex.Store({
     },
     setTab: ({ commit }, payload) => {
       commit('setTab', payload)
-    }
+    },
+    updatePlayers: ({ commit }, payload) => {
+      commit('updatePlayers', payload)
+    },
+    updateGames: ({ commit }, payload) => {
+      commit('updateGames', payload)
+    },
   }
 })

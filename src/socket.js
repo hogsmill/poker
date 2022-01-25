@@ -18,13 +18,23 @@ socket.on('updateConnections', (data) => { bus.$emit('updateConnections', data) 
 
 // Send
 
+bus.$on('sendUpdatePlayers', () => { socket.emit('sendUpdatePlayers') })
+
+bus.$on('sendUpdateGames', () => { socket.emit('sendUpdateGames') })
+
 bus.$on('sendAddPlayer', (data) => { socket.emit('sendAddPlayer', data) })
 
 bus.$on('sendDeletePlayer', (data) => { socket.emit('sendDeletePlayer', data) })
 
-bus.$on('sendUpdatePlayer', (data) => { socket.emit('sendDeletePlayer', data) })
+bus.$on('sendUpdatePlayer', (data) => { socket.emit('sendUpdatePlayer', data) })
 
 bus.$on('sendAddGame', (data) => { socket.emit('sendAddGame', data) })
+
+bus.$on('sendUpdateGame', (data) => { socket.emit('sendUpdateGame', data) })
+
+bus.$on('sendUpdateWinner', (data) => { socket.emit('sendUpdateWinner', data) })
+
+bus.$on('sendToggleGamePlayer', (data) => { socket.emit('sendToggleGamePlayer', data) })
 
 // Receive
 

@@ -60,16 +60,23 @@
             </tr>
          </thead>
          <tbody>
-           <tr v-for="(player, index) in players" :key="index">
-             <td />
+           <tr v-for="(player, index) in players" :key="index" class="player-row">
              <td>
-               {{ player.name }}
+               <i class="fas fa-trash-alt" :title="'Delete ' + player.name" @click="deletePlayer(player)" />
+               <i v-if="editingPlayer != player.id" class="fas fa-edit" :title="'Edit ' + player.name" @click="editPlayer(player.id)" />
+               <i v-if="editingPlayer == player.id" class="fas fa-save" :title="'Save ' + player.name" @click="savePlayer(player.id)" />
+             </td>
+             <td>
+               <div v-if="editingPlayer != player.id">{{ player.name }}</div>
+               <input v-if="editingPlayer == player.id" :id="'edit-player-name-' + player.id" :value="player.name">
               </td>
               <td>
-                {{ player.nickname }}
+                <div v-if="editingPlayer != player.id">{{ player.nickname }}</div>
+                <input v-if="editingPlayer == player.id" :id="'edit-player-nickname-' + player.id" :value="player.nickname">
               </td>
               <td>
-                {{ player.contact }}
+                <div v-if="editingPlayer != player.id">{{ player.contact }}</div>
+                <input v-if="editingPlayer == player.id" :id="'edit-player-contact-' + player.id" :value="player.contact">
               </td>
            </tr>
           </tbody>
@@ -78,49 +85,136 @@
     </div>
     <div class="admin-tab">
       <div>
-        <i v-if="showMeets" @click="setShowMeets(false)" title="collapse" class="fas fa-caret-up toggle" />
-        <i v-if="!showMeets" @click="setShowMeets(true)" title="expand" class="fas fa-caret-down toggle" />
+        <i v-if="showGames" @click="setShowGames(false)" title="collapse" class="fas fa-caret-up toggle" />
+        <i v-if="!showGames" @click="setShowGames(true)" title="expand" class="fas fa-caret-down toggle" />
         <h3>
           Games
         </h3>
       </div>
-      <div v-if="showMeets">
-        <select id="new-meet-day">
-          <option>
+      <div v-if="showGames">
+        <select id="new-game-day">
+          <option value="">
             -- DD --
           </option>
           <option v-for="(n, index) in 31" :key="index">
             {{ n }}
           </option>
         </select>
-        <select id="new-meet-month">
-          <option>
+        <select id="new-game-month">
+          <option value="">
             -- MM --
           </option>
-          <option v-for="(n, index) in 12" :key="index">
-            {{ n }}
+          <option v-for="(n, index) in 12" :key="index" :value="n">
+            {{ months[n] }}
           </option>
         </select>
-        <select id="new-meet-year">
-          <option>
+        <select id="new-game-year">
+          <option value="">
             -- YY --
           </option>
           <option v-for="(n, index) in 5" :key="index">
             {{ n + 2021 }}
           </option>
         </select>
-        <select id="new-meet-host">
-          <option>
+        <select id="new-game-host">
+          <option value="">
             -- Host --
           </option>
           <option v-for="(player, index) in players" :key="index" :value="player.id">
             {{ nameDisplay(player) }}
           </option>
         </select>
-        <button class="btn btn-sm btn-site-primary">
+        <button class="btn btn-sm btn-site-primary" @click="addGame()">
           Add New Game
         </button>
       </div>
+      <table v-if="showGames">
+        <thead>
+          <tr>
+            <th>
+              Actions
+             </th>
+             <th>
+               Winner
+            </th>
+            <th>
+              Game
+            </th>
+            <th>
+              Players
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(game, index) in games" :key="index">
+            <td>
+              <i class="fas fa-trash-alt" title="Delete this game" @click="deleteGame(player)" />
+              <i v-if="editingGame != game.id" class="fas fa-edit" title="Edit this game" @click="editGame(game.id)" />
+              <i v-if="editingGame == game.id" class="fas fa-save" title="Save this game" @click="saveGame(game.id)" />
+            </td>
+            <td>
+              <select :id="'game-winner-' + game.id" :value="game.winner ? game.winner.id : ''" @change="setWinner(game.id)">
+                <option value="">
+                  -- Winner --
+                </option>
+                <option v-for="(player, index) in players" :key="index" :value="player.id">
+                  {{ nameDisplay(player) }}
+                </option>
+              </select>
+            </td>
+            <td class="edit-game">
+              <div v-if="editingGame != game.id" class="display-game">{{ dateDisplay(game.day, game.month, game.year) }} - {{ game.host.name }}</div>
+              <div v-if="editingGame == game.id">
+                <select :id="'editing-game-day-' + game.id" :value="game.day">
+                  <option value="">
+                    -- DD --
+                  </option>
+                  <option v-for="(n, index) in 31" :key="index">
+                    {{ n }}
+                  </option>
+                </select>
+                <select :id="'editing-game-month-' + game.id" :value="game.month">
+                  <option value="">
+                    -- MM --
+                  </option>
+                  <option v-for="(n, index) in 12" :key="index" :value="n">
+                    {{ months[n] }}
+                  </option>
+                </select>
+                <select :id="'editing-game-year-' + game.id" :value="game.year">
+                  <option value="">
+                    -- YY --
+                  </option>
+                  <option v-for="(n, index) in 5" :key="index">
+                    {{ n + 2021 }}
+                  </option>
+                </select>
+                <select :id="'editing-game-host-' + game.id" :value="game.host.id">
+                  <option value="">
+                    -- Host --
+                  </option>
+                  <option v-for="(player, index) in players" :key="index" :value="player.id">
+                    {{ nameDisplay(player) }}
+                  </option>
+                </select>
+              </div>
+            </td>
+            <td>
+              <div class="game-players-header">
+                ({{ game.players.length }})
+                <i v-if="showGamePlayers == game.id" @click="setShowGamePlayers()" title="collapse" class="fas fa-caret-up" />
+                <i v-if="showGamePlayers != game.id" @click="setShowGamePlayers(game.id)" title="expand" class="fas fa-caret-down" />
+              </div>
+              <div v-if="showGamePlayers == game.id" class="game-players">
+                <div v-for="(player, pindex) in players" :key="pindex">
+                  <input type="checkbox" :id="'game-player-' + player.id" :checked="gamePlayer(game, player)" @click="toggleGamePlayer(game, player)">
+                  {{ nameDisplay(player) }}
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -128,34 +222,116 @@
 <script>
 import bus from '../socket.js'
 
+import dateFuns from '../lib/dates.js'
+
 export default {
   data() {
     return {
       showPlayers: false,
-      showMeets: false,
-      players: [
-        { id: 1, name: 'steve', nickname: 'doo' },
-        { id: 2, name: 'mike', nickname: 'gaffer' }
-      ]
+      showGames: false,
+      showGamePlayers: '',
+      editingPlayer: '',
+      editingGame: '',
+      months: {
+        1: 'January',
+        2: 'February',
+        3: 'March',
+        4: 'April',
+        5: 'May',
+        6: 'June',
+        7: 'July',
+        8: 'August',
+        9: 'September',
+        10: 'October',
+        11: 'November',
+        12: 'December'
+      }
+    }
+  },
+  computed: {
+    players() {
+      return this.$store.getters.getPlayers
+    },
+    games() {
+      return this.$store.getters.getGames
     }
   },
   methods: {
     setShowPlayers(val) {
       this.showPlayers = val
     },
-    setShowMeets(val) {
-      this.showMeets = val
+    setShowGames(val) {
+      this.showGames = val
+    },
+    setShowGamePlayers(val) {
+      this.showGamePlayers = val
     },
     nameDisplay(player) {
       return player.nickname
         ? player.nickname + ' (' + player.name + ')'
         : player.name
     },
+    dateDisplay(d, m, y) {
+      return dateFuns.dateString(d, m, y)
+    },
     addPlayer() {
       const name = document.getElementById('new-player-name').value
       const nickname = document.getElementById('new-player-nickname').value
       const contact = document.getElementById('new-player-contact').value
       bus.$emit('sendAddPlayer', {name: name, nickname: nickname, contact: contact})
+    },
+    deletePlayer(player) {
+      if (confirm('Delete ' + player.name)) {
+        bus.$emit('sendDeletePlayer', {id: player.id})
+      }
+    },
+    editPlayer(id) {
+      this.editingPlayer = id
+    },
+    savePlayer(id) {
+      const name = document.getElementById('edit-player-name-' + id).value
+      const nickname = document.getElementById('edit-player-nickname-' + id).value
+      const contact = document.getElementById('edit-player-contact-' + id).value
+      bus.$emit('sendUpdatePlayer', {id: id, player: {name: name, nickname: nickname, contact: contact}})
+      this.editingPlayer = ''
+    },
+    addGame() {
+      const day = document.getElementById('new-game-day').value
+      const month = document.getElementById('new-game-month').value
+      const year = document.getElementById('new-game-year').value
+      const host = document.getElementById('new-game-host').value
+      if (!day || !month ||!year || !host) {
+        alert('Please complete all fields')
+      } else {
+        bus.$emit('sendAddGame', {day: day, month: month, year: year, host: host})
+      }
+    },
+    editGame(id) {
+      this.editingGame = id
+    },
+    saveGame(id) {
+      const day = document.getElementById('editing-game-day-' + id).value
+      const month = document.getElementById('editing-game-month-' + id).value
+      const year = document.getElementById('editing-game-year-' + id).value
+      const host = document.getElementById('editing-game-host-' + id).value
+      if (!day || !month ||!year || !host) {
+        alert('Please complete all fields')
+      } else {
+        bus.$emit('sendUpdateGame', {id: id, game: {day: day, month: month, year: year, host: host}})
+      }
+      this.editingGame = ''
+    },
+    setWinner(id) {
+      const winner = document.getElementById('game-winner-' + id).value
+      bus.$emit('sendUpdateWinner', {id: id, winner: winner})
+    },
+    gamePlayer(game, player) {
+      return game.players.find((p) => {
+        return p == player.id
+      })
+    },
+    toggleGamePlayer(game, player) {
+      bus.$emit('sendToggleGamePlayer', {id: game.id, player: player.id})
     }
   }
 }
@@ -178,8 +354,22 @@ export default {
         padding: 12px;
       }
 
+      .fas {
+        margin: 2px 3px;
+        &.fa-save {
+          margin: 2px 5px;
+        }
+      }
+
       table {
         margin: 12px auto;
+
+        .player-row {
+          div {
+            width: 178px;
+            height: 30px;
+          }
+        }
 
         th {
           border: 1px solid #aaa;
@@ -188,8 +378,31 @@ export default {
 
         td {
           border: 1px solid #aaa;
-          text-align: left;
           padding: 2px 12px;
+          vertical-align: middle;
+
+          &.edit-game {
+            vertical-align: middle;
+
+            div {
+              width: 450px;
+              height: 40px;
+
+              &.display-game {
+                padding-top: 6px;
+                text-align: left;
+              }
+            }
+          }
+
+          .game-players-header {
+            text-align: right;
+            width: 200px;
+          }
+
+          .game-players {
+            text-align: left;
+          }
         }
       }
 
