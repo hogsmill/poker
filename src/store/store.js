@@ -3,16 +3,30 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-function createTable(games) {
+function createTable(players, games) {
   const table = {}
-  let i
-  for (i = 0; i < games.length; i++) {
-    table[games.host] = {
+  for (let i = 0; i < players.length; i++) {
+    table[players[i].id] = {
+      name: players[i].name,
       played: 0,
       won: 0
     }
   }
-  return games
+  for (let j = 0; j < games.length; j++) {
+    if (games[j].winner) {
+      table[games[j].winner.id].won = table[games[j].winner.id].won + 1
+    }
+    for (let k = 0; k < games[j].players.length; k++) {
+      table[games[j].players[k]].played = table[games[j].players[k]].played + 1
+    }
+  }
+  const results = []
+  for (const key in table) {
+    results.push({id: key, results: table[key]})
+  }
+  return results.sort((a, b) => {
+    return b.results.won - a.results.won
+  })
 }
 
 export const store = new Vuex.Store({
@@ -77,7 +91,7 @@ export const store = new Vuex.Store({
     },
     updateGames: (state, payload) => {
       state.games = payload
-      state.table = createTable(payload)
+      state.table = createTable(state.players, payload)
     }
   },
   actions: {

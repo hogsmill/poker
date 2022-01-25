@@ -4,7 +4,38 @@
       Table
     </h2>
     <div>
-      {{ table }}
+      <table>
+        <thead>
+          <th>
+            Name
+          </th>
+          <th>
+            Played
+          </th>
+          <th>
+            Won
+          </th>
+          <th>
+            Points
+          </th>
+        </thead>
+        <tbody>
+          <tr v-for="(result, index) in table" :key="index">
+            <td>
+              {{ result.results.name }}
+            </td>
+            <td>
+              {{ result.results.played }}
+            </td>
+            <td>
+              {{ result.results.won }}
+            </td>
+            <td>
+              {{ result.results.won * 5 }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <h2>
       Results
@@ -63,8 +94,12 @@ export default {
 <style lang="scss">
   .results {
 
+    h2 {
+      margin-top: 36px;
+    }
+
     table {
-      margin: 0 auto;
+      margin: 0 auto 24px auto;
       width: 50%;
 
       td {
