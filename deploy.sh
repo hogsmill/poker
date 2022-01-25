@@ -15,7 +15,7 @@ BASEPORT=3101
 REPO="https://github.com/hogsmill/google-meet.git"
 MAINAPP="poker"
 MAINPLAYERCOLLECTION="pokerPlayers"
-MAINGAMESCOLLECTION="pokerGames"
+MAINGAMECOLLECTION="pokerGames"
 MAINNAME="Poker"
 ROUTES=(
   '',''
