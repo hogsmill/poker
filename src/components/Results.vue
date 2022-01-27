@@ -37,7 +37,7 @@
               {{ result.results.won * 5 }}
             </td>
             <td>
-              {{ result.results.won / result.results.played}}
+              {{ result.results.played ? result.results.won / result.results.played : 0 }}
             </td>
           </tr>
         </tbody>
