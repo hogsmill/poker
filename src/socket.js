@@ -32,6 +32,8 @@ bus.$on('sendAddGame', (data) => { socket.emit('sendAddGame', data) })
 
 bus.$on('sendUpdateGame', (data) => { socket.emit('sendUpdateGame', data) })
 
+bus.$on('sendUpdateNoOfGames', (data) => { socket.emit('sendUpdateNoOfGames', data) })
+
 bus.$on('sendUpdateWinner', (data) => { socket.emit('sendUpdateWinner', data) })
 
 bus.$on('sendToggleGamePlayer', (data) => { socket.emit('sendToggleGamePlayer', data) })

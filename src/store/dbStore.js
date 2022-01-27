@@ -17,8 +17,9 @@ function newGame(data) {
     month: data.month,
     year: data.year,
     host: data.host,
-    winner: null,
-    players: []
+    winners: {},
+    players: [],
+    noOfGames: 0
   }
 }
 
@@ -115,13 +116,28 @@ module.exports = {
     })
   },
 
+  updateNoOfGames: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateNoOfGames', data) }
+
+    db.gameCollection.updateOne({id: data.id}, {$set: {noOfGames: parseInt(data.noOfGames)}}, (err) => {
+      if (err) throw err
+      _updateGames(db, io)
+    })
+  },
+
   updateWinner: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateWinner', data) }
 
-    db.gameCollection.updateOne({id: data.id}, {$set: {winner: data.winner}}, (err) => {
+    db.gameCollection.findOne({id: data.id}, (err, res) => {
       if (err) throw err
-      _updateGames(db, io)
+      const winners = res.winners
+      winners[data.game] = data.winner
+      db.gameCollection.updateOne({id: data.id}, {$set: {winners: winners}}, (err) => {
+        if (err) throw err
+        _updateGames(db, io)
+      })
     })
   },
 

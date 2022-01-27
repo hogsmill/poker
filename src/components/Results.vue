@@ -18,6 +18,9 @@
           <th>
             Points
           </th>
+          <th>
+            Win Ratio
+          </th>
         </thead>
         <tbody>
           <tr v-for="(result, index) in table" :key="index">
@@ -32,6 +35,9 @@
             </td>
             <td>
               {{ result.results.won * 5 }}
+            </td>
+            <td>
+              {{ result.results.won / result.results.played}}
             </td>
           </tr>
         </tbody>
@@ -49,7 +55,10 @@
           Host
         </th>
         <th>
-          Winner
+          No. of Games
+        </th>
+        <th>
+          Winners
         </th>
       </thead>
       <tbody>
@@ -61,7 +70,12 @@
             {{ game.host.name }}
           </td>
           <td>
-            {{ game.winner ? game.winner.name : '' }}
+            {{ game.noOfGames }}
+          </td>
+          <td>
+            <div v-for="(winner, windex) in winners(game)" :key="windex">
+              {{ winner }}
+            </div>
           </td>
         </tr>
       </tbody>
@@ -70,8 +84,6 @@
 </template>
 
 <script>
-//import bus from '../socket.js'
-//
 import dateFuns from '../lib/dates.js'
 
 export default {
@@ -81,11 +93,36 @@ export default {
     },
     table() {
       return this.$store.getters.getTable
+    },
+    players() {
+      return this.$store.getters.getPlayers
     }
   },
   methods: {
     dateString(d, m, y) {
       return dateFuns.dateString(d, m, y)
+    },
+    winners(game) {
+      const winners = {}
+      for (let i = 1; i <= game.noOfGames; i++) {
+        if (game.winners[i]) {
+          winners[game.winners[i]] = winners[game.winners[i]]
+            ? winners[game.winners[i]] + 1
+            : 1
+        }
+      }
+      const ws = []
+      const ks = Object.keys(winners)
+      const keys = ks.sort((a, b) => {
+        return winners[b] - winners[a]
+      })
+      for (let j = 0; j < keys.length; j++) {
+        const player = this.players.find((p) => {
+          return p.id == keys[j]
+        })
+        ws.push(player.name + ' (' + winners[player.id] + ')')
+      }
+      return ws
     }
   }
 }

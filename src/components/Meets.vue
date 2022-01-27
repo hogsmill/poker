@@ -135,7 +135,10 @@
               Actions
              </th>
              <th>
-               Winner
+               No. of Games
+              </th>
+             <th>
+               Winners
             </th>
             <th>
               Game
@@ -153,14 +156,40 @@
               <i v-if="editingGame == game.id" class="fas fa-save" title="Save this game" @click="saveGame(game.id)" />
             </td>
             <td>
-              <select :id="'game-winner-' + game.id" :value="game.winner ? game.winner.id : ''" @change="setWinner(game.id)">
+              <select :id="'no-of-games-' + game.id" :value="game.noOfGames" @change="setNoOfGames(game.id)">
                 <option value="">
-                  -- Winner --
+                  -- Select --
                 </option>
-                <option v-for="(player, index) in players" :key="index" :value="player.id">
-                  {{ nameDisplay(player) }}
+                <option v-for="(n, nindex) in 10" :key="nindex">
+                  {{ n }}
                 </option>
               </select>
+            </td>
+            <td>
+              <div class="game-players-header">
+                <i v-if="showGameWinners == game.id" @click="setShowGameWinners()" title="collapse" class="fas fa-caret-up" />
+                <i v-if="showGameWinners != game.id" @click="setShowGameWinners(game.id)" title="expand" class="fas fa-caret-down" />
+              </div>
+              <div v-if="showGameWinners == game.id">
+                <div v-for="(n, nindex) in game.noOfGames" :key="nindex" class="game-winners">
+                  <div>
+                    Game {{ n }}
+                  </div>
+                  <div>
+                    <select :id="'game-winner-' + game.id + '-' + n" class="winner-select" @change="setWinner(game.id, n)">
+                      <option>
+                        -- Select --
+                      </option>
+                      <option v-for="(player, pindex) in players" :key="pindex"
+                              :value="player.id" :class="{'hide-option' : !gamePlayer(game, player)}"
+                              :selected="game.winners[n] == player.id"
+                      >
+                        {{ nameDisplay(player) }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
             </td>
             <td class="edit-game">
               <div v-if="editingGame != game.id" class="display-game">{{ dateDisplay(game.day, game.month, game.year) }} - {{ game.host.name }}</div>
@@ -230,6 +259,7 @@ export default {
       showPlayers: false,
       showGames: false,
       showGamePlayers: '',
+      showGameWinners: '',
       editingPlayer: '',
       editingGame: '',
       months: {
@@ -265,6 +295,9 @@ export default {
     },
     setShowGamePlayers(val) {
       this.showGamePlayers = val
+    },
+    setShowGameWinners(val) {
+      this.showGameWinners = val
     },
     nameDisplay(player) {
       return player.nickname
@@ -321,9 +354,13 @@ export default {
       }
       this.editingGame = ''
     },
-    setWinner(id) {
-      const winner = document.getElementById('game-winner-' + id).value
-      bus.$emit('sendUpdateWinner', {id: id, winner: winner})
+    setNoOfGames(id) {
+      const n = document.getElementById('no-of-games-' + id).value
+      bus.$emit('sendUpdateNoOfGames', {id: id, noOfGames: n})
+    },
+    setWinner(id, n) {
+      const winner = document.getElementById('game-winner-' + id + '-' + n).value
+      bus.$emit('sendUpdateWinner', {id: id, game: n, winner: winner})
     },
     gamePlayer(game, player) {
       return game.players.find((p) => {
@@ -402,6 +439,25 @@ export default {
 
           .game-players {
             text-align: left;
+          }
+
+          .game-winners {
+            div {
+              display: inline-block;
+
+              &:nth-of-type(1) {
+                width: 30%;
+              }
+              &:nth-of-type(2) {
+                width: 70%;
+              }
+            }
+          }
+
+          .winner-select {
+            .hide-option {
+              display: none;
+            }
           }
         }
       }

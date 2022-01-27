@@ -118,8 +118,10 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendUpdateGame', (data) => { dbStore.updateGame(db, io, data, debugOn) })
 
+    socket.on('sendUpdateNoOfGames', (data) => { dbStore.updateNoOfGames(db, io, data, debugOn) })
+
     socket.on('sendUpdateWinner', (data) => { dbStore.updateWinner(db, io, data, debugOn) })
-    
+
     socket.on('sendToggleGamePlayer', (data) => { dbStore.toggleGamePlayer(db, io, data, debugOn) })
 
   })
