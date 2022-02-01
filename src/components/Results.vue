@@ -102,6 +102,10 @@ export default {
     dateString(d, m, y) {
       return dateFuns.dateString(d, m, y)
     },
+    winRatio(results) {
+      const ratio = results.played ? results.won / results.played : 0
+      return parseInt(ratio * 100) / 100
+    },
     winners(game) {
       const winners = {}
       for (let i = 1; i <= game.noOfGames; i++) {
