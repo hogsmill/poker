@@ -3,6 +3,11 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+function winRatio(results) {
+  const ratio = results.played ? results.won / results.played : 0
+  return parseInt(ratio * 100) / 100
+}
+
 function createTable(players, games) {
   const table = {}
   for (let i = 0; i < players.length; i++) {
@@ -30,18 +35,24 @@ function createTable(players, games) {
   }
   const results = []
   for (const key in table) {
-    results.push({id: key, results: table[key]})
+    const result = table[key]
+    result.winRatio = winRatio(result)
+    results.push({id: key, results: result})
   }
   return results.sort((a, b) => {
     let sorted
-    if (a.results.won == b.results.won) {
-      if (a.results.played == b.results.played) {
-        sorted = b.results.name < a.results.name
+    if (a.results.winRatio == b.results.winRatio) {
+      if (a.results.won == b.results.won) {
+        if (a.results.played == b.results.played) {
+          sorted = b.results.name < a.results.name
+        } else {
+          sorted = b.results.played - a.results.played
+        }
       } else {
-        sorted = b.results.played - a.results.played
+        sorted = b.results.won - a.results.won
       }
     } else {
-      sorted = b.results.won - a.results.won
+      sorted = b.results.winRatio - a.results.winRatio     
     }
     return sorted
   })

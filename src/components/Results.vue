@@ -37,7 +37,7 @@
               {{ result.results.won * 5 }}
             </td>
             <td>
-              {{ winRatio(result.results) }}
+              {{ result.results.winRatio }}
             </td>
           </tr>
         </tbody>
