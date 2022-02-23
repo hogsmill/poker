@@ -9,44 +9,44 @@
         </h3>
       </div>
       <div v-if="showPlayers">
-      <table>
-        <tr>
-          <td>
-            Name
-          </td>
-          <td>
-            <input id="new-player-name">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Nickname
-          </td>
-          <td>
-            <input id="new-player-nickname">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Contact
-          </td>
-          <td>
-            <input id="new-player-contact">
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2" class="right">
-            <button class="btn btn-sm btn-site-primary" @click="addPlayer()">
-              Add New Player
-            </button>
-          </td>
-        </tr>
-      </table>
-       <table>
-         <thead>
-           <tr>
-             <th>
-               Actions
+        <table>
+          <tr>
+            <td>
+              Name
+            </td>
+            <td>
+              <input id="new-player-name">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Nickname
+            </td>
+            <td>
+              <input id="new-player-nickname">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Contact
+            </td>
+            <td>
+              <input id="new-player-contact">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="right">
+              <button class="btn btn-sm btn-site-primary" @click="addPlayer()">
+                Add New Player
+              </button>
+            </td>
+          </tr>
+        </table>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Actions
               </th>
               <th>
                 Name
@@ -58,29 +58,35 @@
                 Contact
               </th>
             </tr>
-         </thead>
-         <tbody>
-           <tr v-for="(player, index) in players" :key="index" class="player-row">
-             <td>
-               <i class="fas fa-trash-alt" :title="'Delete ' + player.name" @click="deletePlayer(player)" />
-               <i v-if="editingPlayer != player.id" class="fas fa-edit" :title="'Edit ' + player.name" @click="editPlayer(player.id)" />
-               <i v-if="editingPlayer == player.id" class="fas fa-save" :title="'Save ' + player.name" @click="savePlayer(player.id)" />
-             </td>
-             <td>
-               <div v-if="editingPlayer != player.id">{{ player.name }}</div>
-               <input v-if="editingPlayer == player.id" :id="'edit-player-name-' + player.id" :value="player.name">
+          </thead>
+          <tbody>
+            <tr v-for="(player, index) in players" :key="index" class="player-row">
+              <td>
+                <i class="fas fa-trash-alt" :title="'Delete ' + player.name" @click="deletePlayer(player)" />
+                <i v-if="editingPlayer != player.id" class="fas fa-edit" :title="'Edit ' + player.name" @click="editPlayer(player.id)" />
+                <i v-if="editingPlayer == player.id" class="fas fa-save" :title="'Save ' + player.name" @click="savePlayer(player.id)" />
               </td>
               <td>
-                <div v-if="editingPlayer != player.id">{{ player.nickname }}</div>
+                <div v-if="editingPlayer != player.id">
+                  {{ player.name }}
+                </div>
+                <input v-if="editingPlayer == player.id" :id="'edit-player-name-' + player.id" :value="player.name">
+              </td>
+              <td>
+                <div v-if="editingPlayer != player.id">
+                  {{ player.nickname }}
+                </div>
                 <input v-if="editingPlayer == player.id" :id="'edit-player-nickname-' + player.id" :value="player.nickname">
               </td>
               <td>
-                <div v-if="editingPlayer != player.id">{{ player.contact }}</div>
+                <div v-if="editingPlayer != player.id">
+                  {{ player.contact }}
+                </div>
                 <input v-if="editingPlayer == player.id" :id="'edit-player-contact-' + player.id" :value="player.contact">
               </td>
-           </tr>
+            </tr>
           </tbody>
-       </table>
+        </table>
       </div>
     </div>
     <div class="admin-tab">
@@ -96,7 +102,7 @@
           <option value="">
             -- DD --
           </option>
-          <option v-for="(n, index) in 31" :key="index">
+          <option v-for="(n, dindex) in 31" :key="dindex">
             {{ n }}
           </option>
         </select>
@@ -104,7 +110,7 @@
           <option value="">
             -- MM --
           </option>
-          <option v-for="(n, index) in 12" :key="index" :value="n">
+          <option v-for="(n, mindex) in 12" :key="mindex" :value="n">
             {{ months[n] }}
           </option>
         </select>
@@ -112,7 +118,7 @@
           <option value="">
             -- YY --
           </option>
-          <option v-for="(n, index) in 5" :key="index">
+          <option v-for="(n, yindex) in 5" :key="yindex">
             {{ n + 2021 }}
           </option>
         </select>
@@ -120,7 +126,7 @@
           <option value="">
             -- Host --
           </option>
-          <option v-for="(player, index) in players" :key="index" :value="player.id">
+          <option v-for="(player, pindex) in players" :key="pindex" :value="player.id">
             {{ nameDisplay(player) }}
           </option>
         </select>
@@ -133,12 +139,12 @@
           <tr>
             <th>
               Actions
-             </th>
-             <th>
-               No. of Games
-              </th>
-             <th>
-               Winners
+            </th>
+            <th>
+              No. of Games
+            </th>
+            <th>
+              Winners
             </th>
             <th>
               Game
@@ -149,7 +155,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(game, index) in games" :key="index">
+          <tr v-for="(game, gindex) in games" :key="gindex">
             <td>
               <i class="fas fa-trash-alt" title="Delete this game" @click="deleteGame(player)" />
               <i v-if="editingGame != game.id" class="fas fa-edit" title="Edit this game" @click="editGame(game.id)" />
@@ -180,9 +186,10 @@
                       <option>
                         -- Select --
                       </option>
-                      <option v-for="(player, pindex) in players" :key="pindex"
-                              :value="player.id" :class="{'hide-option' : !gamePlayer(game, player)}"
-                              :selected="game.winners[n] == player.id"
+                      <option
+                        v-for="(player, pindex) in players" :key="pindex"
+                        :value="player.id" :class="{'hide-option' : !gamePlayer(game, player)}"
+                        :selected="game.winners[n] == player.id"
                       >
                         {{ nameDisplay(player) }}
                       </option>
@@ -192,13 +199,15 @@
               </div>
             </td>
             <td class="edit-game">
-              <div v-if="editingGame != game.id" class="display-game">{{ dateDisplay(game.day, game.month, game.year) }} - {{ game.host.name }}</div>
+              <div v-if="editingGame != game.id" class="display-game">
+                {{ dateDisplay(game.day, game.month, game.year) }} - {{ game.host.name }}
+              </div>
               <div v-if="editingGame == game.id">
                 <select :id="'editing-game-day-' + game.id" :value="game.day">
                   <option value="">
                     -- DD --
                   </option>
-                  <option v-for="(n, index) in 31" :key="index">
+                  <option v-for="(n, dindex) in 31" :key="dindex">
                     {{ n }}
                   </option>
                 </select>
@@ -206,7 +215,7 @@
                   <option value="">
                     -- MM --
                   </option>
-                  <option v-for="(n, index) in 12" :key="index" :value="n">
+                  <option v-for="(n, mindex) in 12" :key="mindex" :value="n">
                     {{ months[n] }}
                   </option>
                 </select>
@@ -214,7 +223,7 @@
                   <option value="">
                     -- YY --
                   </option>
-                  <option v-for="(n, index) in 5" :key="index">
+                  <option v-for="(n, dindex) in 5" :key="dindex">
                     {{ n + 2021 }}
                   </option>
                 </select>
@@ -222,7 +231,7 @@
                   <option value="">
                     -- Host --
                   </option>
-                  <option v-for="(player, index) in players" :key="index" :value="player.id">
+                  <option v-for="(player, pindex) in players" :key="pindex" :value="player.id">
                     {{ nameDisplay(player) }}
                   </option>
                 </select>
@@ -311,11 +320,11 @@ export default {
       const name = document.getElementById('new-player-name').value
       const nickname = document.getElementById('new-player-nickname').value
       const contact = document.getElementById('new-player-contact').value
-      bus.$emit('sendAddPlayer', {name: name, nickname: nickname, contact: contact})
+      bus.emit('sendAddPlayer', {name: name, nickname: nickname, contact: contact})
     },
     deletePlayer(player) {
       if (confirm('Delete ' + player.name)) {
-        bus.$emit('sendDeletePlayer', {id: player.id})
+        bus.emit('sendDeletePlayer', {id: player.id})
       }
     },
     editPlayer(id) {
@@ -325,7 +334,7 @@ export default {
       const name = document.getElementById('edit-player-name-' + id).value
       const nickname = document.getElementById('edit-player-nickname-' + id).value
       const contact = document.getElementById('edit-player-contact-' + id).value
-      bus.$emit('sendUpdatePlayer', {id: id, player: {name: name, nickname: nickname, contact: contact}})
+      bus.emit('sendUpdatePlayer', {id: id, player: {name: name, nickname: nickname, contact: contact}})
       this.editingPlayer = ''
     },
     addGame() {
@@ -336,7 +345,7 @@ export default {
       if (!day || !month ||!year || !host) {
         alert('Please complete all fields')
       } else {
-        bus.$emit('sendAddGame', {day: day, month: month, year: year, host: host})
+        bus.emit('sendAddGame', {day: day, month: month, year: year, host: host})
       }
     },
     editGame(id) {
@@ -350,17 +359,17 @@ export default {
       if (!day || !month ||!year || !host) {
         alert('Please complete all fields')
       } else {
-        bus.$emit('sendUpdateGame', {id: id, game: {day: day, month: month, year: year, host: host}})
+        bus.emit('sendUpdateGame', {id: id, game: {day: day, month: month, year: year, host: host}})
       }
       this.editingGame = ''
     },
     setNoOfGames(id) {
       const n = document.getElementById('no-of-games-' + id).value
-      bus.$emit('sendUpdateNoOfGames', {id: id, noOfGames: n})
+      bus.emit('sendUpdateNoOfGames', {id: id, noOfGames: n})
     },
     setWinner(id, n) {
       const winner = document.getElementById('game-winner-' + id + '-' + n).value
-      bus.$emit('sendUpdateWinner', {id: id, game: n, winner: winner})
+      bus.emit('sendUpdateWinner', {id: id, game: n, winner: winner})
     },
     gamePlayer(game, player) {
       return game.players.find((p) => {
@@ -368,7 +377,7 @@ export default {
       })
     },
     toggleGamePlayer(game, player) {
-      bus.$emit('sendToggleGamePlayer', {id: game.id, player: player.id})
+      bus.emit('sendToggleGamePlayer', {id: game.id, player: player.id})
     }
   }
 }

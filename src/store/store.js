@@ -1,7 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
 
-Vue.use(Vuex)
+import { createStore } from 'vuex'
 
 function winRatio(results) {
   const ratio = results.played ? results.won / results.played : 0
@@ -52,18 +50,21 @@ function createTable(players, games) {
         sorted = b.results.won - a.results.won
       }
     } else {
-      sorted = b.results.winRatio - a.results.winRatio     
+      sorted = b.results.winRatio - a.results.winRatio
     }
     return sorted
   })
 }
 
-export const store = new Vuex.Store({
+export const store = createStore({
   state: {
     thisGame: 'Poker Club',
     connections: 0,
     connectionError: null,
     localStorageStatus: true,
+    modals: {
+      feedback: false
+    },
     tab: 'results',
     players: [],
     games: [],
@@ -84,6 +85,9 @@ export const store = new Vuex.Store({
     },
     getTab: (state) => {
       return state.tab
+    },
+    getModals: (state) => {
+      return state.modals
     },
     getPlayers: (state) => {
       return state.players
@@ -115,6 +119,16 @@ export const store = new Vuex.Store({
     setTab: (state, payload) => {
       state.tab = payload
     },
+    showModal: (state, payload) => {
+      const modals = Object.keys(state.modals)
+      for (let i = 0; i < modals.length; i++) {
+        state.modals[modals[i]] = false
+      }
+      state.modals[payload] = true
+    },
+    hideModal: (state, payload) => {
+      state.modals[payload] = false
+    },
     updatePlayers: (state, payload) => {
       state.players = payload
     },
@@ -135,6 +149,12 @@ export const store = new Vuex.Store({
     },
     setTab: ({ commit }, payload) => {
       commit('setTab', payload)
+    },
+    showModal: ({ commit }, payload) => {
+      commit('showModal', payload)
+    },
+    hideModal: ({ commit }, payload) => {
+      commit('hideModal', payload)
     },
     updatePlayers: ({ commit }, payload) => {
       commit('updatePlayers', payload)

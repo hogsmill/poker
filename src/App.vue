@@ -12,6 +12,7 @@
     </h1>
     <Results v-if="currentTab == 'results'" />
     <Meets v-if="currentTab == 'games'" />
+    <Modals />
   </div>
 </template>
 
@@ -23,13 +24,15 @@ import ls from './lib/localStorage.js'
 import Header from './components/Header.vue'
 import Results from './components/Results.vue'
 import Meets from './components/Meets.vue'
+import Modals from './components/Modals.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
     Results,
-    Meets
+    Meets,
+    Modals
   },
   computed: {
     connectionError() {
@@ -45,23 +48,23 @@ export default {
   created() {
     this.$store.dispatch('localStorageStatus', ls.check())
 
-    bus.$on('connectionError', (data) => {
+    bus.on('connectionError', (data) => {
       this.$store.dispatch('updateConnectionError', data)
     })
 
-    bus.$on('updateConnections', (data) => {
+    bus.on('updateConnections', (data) => {
       this.$store.dispatch('updateConnectionError', null)
       this.$store.dispatch('updateConnections', data)
     })
 
-    bus.$emit('sendUpdatePlayers')
-    bus.$emit('sendUpdateGames')
+    bus.emit('sendUpdatePlayers')
+    bus.emit('sendUpdateGames')
 
-    bus.$on('updatePlayers', (data) => {
+    bus.on('updatePlayers', (data) => {
       this.$store.dispatch('updatePlayers', data)
     })
 
-    bus.$on('updateGames', (data) => {
+    bus.on('updateGames', (data) => {
       console.log('games', data)
       this.$store.dispatch('updateGames', data)
     })
