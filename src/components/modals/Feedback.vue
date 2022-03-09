@@ -8,7 +8,7 @@
     <div class="mt-4">
       <h4>Feedback</h4>
       <p class="modal-form">
-        Thanks for visiting Agile Simulations; we'd love to hear any feedback you have
+        Thanks for vusing thr Poker app; we'd love to hear any feedback you have
         so that we can constantly improve things.
       </p>
       <div class="modal-form">
