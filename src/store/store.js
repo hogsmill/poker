@@ -1,7 +1,7 @@
 
 import { createStore } from 'vuex'
 
-const sortOrder [
+const sortOrder = [
   'won',
   'winRatio',
   'played',
