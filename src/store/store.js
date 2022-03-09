@@ -1,6 +1,13 @@
 
 import { createStore } from 'vuex'
 
+const sortOrder [
+  'won',
+  'winRatio',
+  'played',
+  'name'
+]
+
 function winRatio(results) {
   const ratio = results.played ? results.won / results.played : 0
   return parseInt(ratio * 100) / 100
@@ -39,18 +46,18 @@ function createTable(players, games) {
   }
   return results.sort((a, b) => {
     let sorted
-    if (a.results.winRatio == b.results.winRatio) {
-      if (a.results.won == b.results.won) {
-        if (a.results.played == b.results.played) {
-          sorted = b.results.name < a.results.name
+    if (a.results[sortOrder[0]] == b.results[sortOrder[0]]) {
+      if (a.results[sortOrder[1]] == b.results[sortOrder[1]]) {
+        if (a.results[sortOrder[2]] == b.results[sortOrder[2]]) {
+          sorted = b.results[sortOrder[3]] < a.results[sortOrder[3]]
         } else {
-          sorted = b.results.played - a.results.played
+          sorted = b.results[sortOrder[2]]- a.results[sortOrder[2]]
         }
       } else {
-        sorted = b.results.won - a.results.won
+        sorted = b.results[sortOrder[1]] - a.results[sortOrder[1]]
       }
     } else {
-      sorted = b.results.winRatio - a.results.winRatio
+      sorted = b.results[sortOrder[0]] - a.results[sortOrder[0]]
     }
     return sorted
   })

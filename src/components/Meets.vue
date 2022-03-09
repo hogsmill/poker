@@ -157,7 +157,7 @@
         <tbody>
           <tr v-for="(game, gindex) in games" :key="gindex">
             <td>
-              <i class="fas fa-trash-alt" title="Delete this game" @click="deleteGame(player)" />
+              <i class="fas fa-trash-alt" title="Delete this game" @click="deleteGame(game)" />
               <i v-if="editingGame != game.id" class="fas fa-edit" title="Edit this game" @click="editGame(game.id)" />
               <i v-if="editingGame == game.id" class="fas fa-save" title="Save this game" @click="saveGame(game.id)" />
             </td>
